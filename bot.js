@@ -1,6 +1,7 @@
 var Discord = require('discord.io');
 var logger = require('winston');
 var auth = require('./auth.json');
+var imgflip = require('./imgflip')
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -34,6 +35,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
                 break;
             // Just add any case commands if you want to..
+            case 'getMemes':
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'getMemes!'
+                })
         }
     }
 });
