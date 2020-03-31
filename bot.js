@@ -18,15 +18,18 @@ bot.on('ready', function (evt) {
     logger.info('Logged in as: ');
     logger.info(bot.username + ' - (' + bot.id + ')');
 });
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', async function (user, userID, channelID, message, evt) {
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
     if (message.substring(0, 1) == '!') {
-        var args = message.substring(1).split(' ');
-        var cmd = args[0];
-
+        let args = message.substring(1).split(' ');
+        console.log("args:")
+        let cmd = args[0];
+        let messageContent;
         args = args.splice(1);
+        console.log(args);
         switch (cmd) {
+
             // !ping
             case 'ping':
                 bot.sendMessage({
@@ -37,9 +40,31 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             // Just add any case commands if you want to..
             case 'getMemes':
                 bot.sendMessage({
-                    to: channelID,
-                    message: 'getMemes!'
+                    to: userID,
+                    message: `${user} ${userID} gotMemes!`
                 })
+                break;
+            case 'searchMemes':
+                messageContent = await imgflip.searchMemes(args[0])
+                bot.sendMessage({
+                    // to: userID,
+                    to: channelID,
+                    message: messageContent
+                })
+                break;
+            case 'preview':
+                // TODO
+                /*
+                    rework this command, img previews aren't aways right
+                */
+
+                messageContent = await imgflip.showPreview(args.toString())
+                bot.sendMessage({
+                    // to: userID,
+                    to: channelID,
+                    message: messageContent
+                })
+                break;
         }
     }
 });
